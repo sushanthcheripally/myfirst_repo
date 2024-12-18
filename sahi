@@ -1,4 +1,21 @@
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '%EMAIL%'
 AND TABLE_SCHEMA NOT IN(
 'dbo'
-)
+ UPDATE TOLLPLUS.QUEUE_ASSIGNTAGDETAILS            
+  SET ISTAGASSIGN = 0            
+   ,UPDATEDDATE = GETDATE()            
+   ,UPDATEDUSER = 'SYSTEM'            
+   ,RETRYATTEMPTS = 0   
+   ,STATUS=NULL  
+  WHERE  ISTAGASSIGN<>1  AND HEXTAGID IN (            
+    SELECT DISTINCT CASE             
+      WHEN TAGID LIKE '91%'            
+       AND LEN(TAGID) = 24            
+       THEN SUBSTRING(TAGID, 0, 21)            
+      ELSE TAGID            
+      END AS NEWTAGID            
+    FROM [TOLLPLUS].[INBOUNDTXNS_PROCESSTXNS_REPROCESS] SRC(NOLOCK)            
+    WHERE REPROCESSTYPEID = @LV_REPROCESSTYPEID            
+     AND ISPROCESSED = 0   and RETRYATTEMPTS < 3          
+    )            
+ END    )
