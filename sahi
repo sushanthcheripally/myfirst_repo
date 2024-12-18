@@ -1,2 +1,4 @@
-i love my india
-thats why i want to become ias 
+SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE COLUMN_NAME LIKE '%EMAIL%'
+AND TABLE_SCHEMA NOT IN(
+'dbo'
+)
